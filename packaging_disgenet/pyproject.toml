@@ -1,0 +1,33 @@
+[build-system]
+requires = ["poetry_core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "disgenet_muskan"
+version = "0.0.1"
+authors = [
+  "Muskan Manav <somumana@uni-bonn.de>"
+]
+description = "A small example package"
+readme = "README.md"
+#long_description_content_type = "text/markdown"
+
+#python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.poetry.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+
+[tool.poetry.dependencies]
+requests = "^2.25.1"
+pandas = "^1.2.4"
+sqlalchemy = "^1.4.15"
+SQLAlchemy-Utils = "^0.37.8"
+#SQLAlchemy-Utils = "^0.37.7"
+pymysql = "1.0.2"
+cryptography = "^3.4.7"

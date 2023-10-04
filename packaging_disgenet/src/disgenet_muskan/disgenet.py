@@ -1,12 +1,12 @@
 from sqlalchemy import create_engine,inspect
 from sqlalchemy.orm import Session
-from disgent_muskan.constants import DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,get_file_path,get_standard_name,standardize_column_names,engine
-from disgent_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
-from tqdm import tqdm
+from disgenet_muskan.constants import DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,get_file_path,get_standard_name,standardize_column_names,engine
+from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
+#from tqdm import tqdm
 import pandas as pd
 
 """DisGeNet."""
-class dg:
+class Disgenet:
     """DisGeNet (https://www.disgenet.org)."""
 
     def __init__(self):
@@ -140,5 +140,5 @@ class dg:
 if __name__ == "__main__":
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    d = dg()
+    d = Disgenet()
     d.insert_data()

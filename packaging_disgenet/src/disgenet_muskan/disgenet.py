@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine,inspect
-from sqlalchemy.orm import Session
-from disgenet_muskan.constants import DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,get_file_path,get_standard_name,standardize_column_names,engine
+from sqlalchemy.orm import Session,sessionmaker
+from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string#,get_file_path,standardize_column_names
 from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
-#from tqdm import tqdm
+from tqdm import tqdm
 import pandas as pd
+import os
+import re
 
 """DisGeNet."""
 class Disgenet:
@@ -21,20 +23,50 @@ class Disgenet:
         #self.engine = create_engine(connection_string_with_db)
         self.session = Session(self.engine)
 
-    def insert_data(self) :
+    def insert_data(self):
         """Insert data into database."""
         inserted = dict()
-        inserted["sources"] = self._insert_sources()
-        inserted["gene_symbols"] = self._insert_gene_symbols()
-        inserted["gene_disease_names"] = self._insert_disease_names()
-        inserted["gene_disease_pmid_associations"] = self._insert_gene_disease_pmid_associations()
-        inserted["variant_disease_pmid_associations"] = self._insert_variant_disease_pmid_associations()
-        return inserted
 
+        with tqdm(total=5, desc="Inserting data into database") as pbar:
+            inserted["sources"] = self._insert_sources()
+            pbar.update(1)
+            inserted["gene_symbols"] = self._insert_gene_symbols()
+            pbar.update(1)
+            inserted["gene_disease_names"] = self._insert_disease_names()
+            pbar.update(1)
+            inserted["gene_disease_pmid_associations"] = self._insert_gene_disease_pmid_associations()
+            pbar.update(1)
+            inserted["variant_disease_pmid_associations"] = self._insert_variant_disease_pmid_associations()
+            pbar.update(1)
+        return inserted
+    def get_file_path(self,url: str, biodb: str):
+        """Get standard file path by file_name and DATADIR."""
+        file_name = os.path.basename(url)
+        return os.path.join(DATA_DIR, file_name)
+
+
+    def get_standard_name(self,name: str) -> str:
+        """Return standard name."""
+        part_of_name = [x for x in re.findall("[A-Z]*[a-z0-9]*", name) if x]
+        new_name = "_".join(part_of_name).lower()
+        if re.search(r"^\d+", new_name):
+            new_name = "_" + new_name
+        return new_name
+
+
+    def standardize_column_names(self,columns) :
+            """Standardize column names.
+
+            Parameters
+            ----------
+            columns: Iterable[str]
+                Iterable of columns names.
+            """
+            return [self.get_standard_name(x) for x in columns]
     def __get_file_for_model(self, model):
         """Return filepath of given model."""
         #print(get_file_path(self.urls[model.__tablename__], self.biodb_name))
-        return get_file_path(self.urls[model.__tablename__], self.biodb_name)
+        return self.get_file_path(self.urls[model.__tablename__], self.biodb_name)
 
     @property
     def file_path_gene(self):
@@ -56,11 +88,7 @@ class Disgenet:
 
         # Reset the index to avoid including it in the INSERT statement
         df.reset_index(drop=True, inplace=True)
-        
-        #with tqdm(total=df.shape[0], desc="Inserting sources") as pbar:
         df.to_sql(DisgenetSource.__tablename__, self.engine, if_exists='append', index=False)
-            #pbar.update(df.shape[0])
-        
         return df.shape[0]
 
     def _insert_disease_names(self) -> int:
@@ -79,8 +107,6 @@ class Disgenet:
             .drop_duplicates()
             .set_index("disease_id")
         )
-
-        #df_concat= pd.concat([df_gene, df_variant]).drop_duplicates()
         df_concat = pd.concat([df_gene, df_variant]).drop_duplicates()
         df_concat.to_sql(DisgenetDisease.__tablename__, self.engine, if_exists="append")
         return df_concat.shape[0]
@@ -94,7 +120,6 @@ class Disgenet:
             .drop_duplicates()
             .set_index("gene_id")
         )
-        #df.reset_index(drop=True, inplace=True)
         df.to_sql(DisgenetGeneSymbol.__tablename__, self.engine, if_exists='append')
         return df.shape[0]
 
@@ -106,10 +131,8 @@ class Disgenet:
     
 
     def _insert_gene_disease_pmid_associations(self) -> int:
-
-
         usecols_gene = ["geneId", "diseaseId", "score", "pmid", "source"]
-        rename_dict = dict(zip(usecols_gene, standardize_column_names(usecols_gene)))
+        rename_dict = dict(zip(usecols_gene, self.standardize_column_names(usecols_gene)))
         df = pd.read_csv(self.file_path_gene, sep="\t", usecols=usecols_gene).rename(columns=rename_dict)
 
         df = self._merge_with_source(df)
@@ -128,7 +151,7 @@ class Disgenet:
             "pmid",
             "source",
         ]
-        rename_dict = dict(zip(usecols_variant, standardize_column_names(usecols_variant)))
+        rename_dict = dict(zip(usecols_variant, self.standardize_column_names(usecols_variant)))
         df = pd.read_csv(self.file_path_variant, sep="\t", usecols=usecols_variant).rename(columns=rename_dict)
 
         df = self._merge_with_source(df)
@@ -136,9 +159,27 @@ class Disgenet:
         df.index.rename("id", inplace=True)
         df.to_sql(DisgenetVariant.__tablename__, self.engine, if_exists="append")
         return df.shape[0]
-    
-if __name__ == "__main__":
-    Base.metadata.drop_all(engine)
+
+# Check if tables exist
+existing_tables = engine.table_names()
+print(existing_tables)
+create_session = sessionmaker(bind=engine)
+session = create_session()
+if not existing_tables:
+    # Tables do not exist, so create them
     Base.metadata.create_all(engine)
+    print('Tables Created')
+tables_have_data = any(session.query(table).count() > 0 for table in Base.metadata.sorted_tables)
+
+if not tables_have_data:
+    # Tables do not have data, so insert data
     d = Disgenet()
     d.insert_data()
+else:
+    print('Tables already have data. Skipping insert.')
+
+# Close the session
+session.close()
+
+
+

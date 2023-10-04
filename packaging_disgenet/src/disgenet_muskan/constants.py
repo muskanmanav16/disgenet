@@ -27,11 +27,15 @@ download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, 'all_variant_disease_pm
 print(f'Data Downloaded : {DATA_DIR} ')
 
 
+#creating database if not present:
+engine_new = create_engine(f'mysql+pymysql://root:root_passwd@127.0.0.1:3307')
+with engine_new.connect() as connection:
+    connection.execute("CREATE DATABASE IF NOT EXISTS disgenet")
+    connection.execute("USE disgenet")
+    # connection.dispose()
+print("Database created and selected successfully.")
+
 # Create the connection string
 connection_string = f'mysql+pymysql://root:root_passwd@127.0.0.1:3307/disgenet'
 engine = create_engine(connection_string)
-# Execute SQL statements
-with engine.connect() as connection:
-    connection.execute("CREATE DATABASE IF NOT EXISTS disgenet")
-    connection.execute("USE disgenet")
-print("Database created and selected successfully.")
+

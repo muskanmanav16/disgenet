@@ -160,26 +160,13 @@ class Disgenet:
         df.to_sql(DisgenetVariant.__tablename__, self.engine, if_exists="append")
         return df.shape[0]
 
-# Check if tables exist
-existing_tables = engine.table_names()
-print(existing_tables)
-create_session = sessionmaker(bind=engine)
-session = create_session()
-if not existing_tables:
-    # Tables do not exist, so create them
-    Base.metadata.create_all(engine)
-    print('Tables Created')
-tables_have_data = any(session.query(table).count() > 0 for table in Base.metadata.sorted_tables)
+Base.metadata.drop_all(engine)
+print('Tables Dropped')
+Base.metadata.create_all(engine)
+print('Tables Created')
+d = Disgenet()
+d.insert_data()
 
-if not tables_have_data:
-    # Tables do not have data, so insert data
-    d = Disgenet()
-    d.insert_data()
-else:
-    print('Tables already have data. Skipping insert.')
-
-# Close the session
-session.close()
 
 
 

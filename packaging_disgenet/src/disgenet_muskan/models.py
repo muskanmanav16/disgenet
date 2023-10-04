@@ -3,16 +3,12 @@ from sqlalchemy import BigInteger, Column, Float, ForeignKey, Integer, String,in
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-#from ebel.manager.rdbms.models import object_as_dict
-
 
 def object_as_dict(obj, exclude: list = []) -> dict:
     """Return object values as a dictionary."""
     return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs if c.key not in exclude}
 
 Base = declarative_base()
-
-
 class DisgenetGene(Base):
     """Class definition for the disgeneåt_gene table."""
 

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine,inspect
 from sqlalchemy.orm import Session,sessionmaker
-from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string#,get_file_path,standardize_column_names
+from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,download_file#,get_file_path,standardize_column_names
 from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
 from tqdm import tqdm
 import pandas as pd
@@ -160,12 +160,18 @@ class Disgenet:
         df.to_sql(DisgenetVariant.__tablename__, self.engine, if_exists="append")
         return df.shape[0]
 
-Base.metadata.drop_all(engine)
-print('Tables Dropped')
-Base.metadata.create_all(engine)
-print('Tables Created')
-d = Disgenet()
-d.insert_data()
+def populate_data():
+    '''defining class instance and calling class method''' 
+    download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, 'all_gene_disease_pmid_associations.tsv.gz'))
+    download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, 'all_variant_disease_pmid_associations.tsv.gz'))                                 
+    d = Disgenet()
+    Base.metadata.drop_all(engine)       # drop if already exists
+    Base.metadata.create_all(engine)     # re create incase it already exists, to avoid duplicates   
+    d.insert_data()
+    d.session.close()
+
+if __name__ == "__main__":
+    populate_data()
 
 
 

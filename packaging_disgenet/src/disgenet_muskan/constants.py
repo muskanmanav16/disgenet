@@ -22,9 +22,9 @@ def download_file(url, file_path):
         return True
     return False
 
-download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, 'all_gene_disease_pmid_associations.tsv.gz'))
-download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, 'all_variant_disease_pmid_associations.tsv.gz'))
-print(f'Data Downloaded : {DATA_DIR} ')
+# download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, 'all_gene_disease_pmid_associations.tsv.gz'))
+# download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, 'all_variant_disease_pmid_associations.tsv.gz'))
+# print(f'Data Downloaded : {DATA_DIR} ')
 
 
 #creating database if not present:

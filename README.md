@@ -5,7 +5,7 @@ disgenet_muskan package allows you to:
 
 1. Create 'disgenet' db 
 2. Add 5 tables in this disgenet db 
-3. Downloads the disgenet data from ftp server
+3. Downloads the disgenet data from http server
 4. Imports the downloaded data into the disgenet tables
 
 

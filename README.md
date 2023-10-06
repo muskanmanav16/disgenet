@@ -30,7 +30,7 @@ To make it easy for you to get started with disgenet_muskan package,  here's a l
 
 
 ## Support
-Please reach out via email at muskanmanav16d@gmail.com for any questions
+Please reach out via email at muskanmanav16@gmail.com for any questions
 
 
 ## Authors and acknowledgment

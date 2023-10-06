@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine,inspect
 from sqlalchemy.orm import Session
-from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,download_file
+from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,download_file,DISGENET_GDP_FILE,DISGENET_VDP_FILE
 from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
 from tqdm import tqdm
 import pandas as pd
@@ -161,17 +161,15 @@ class Disgenet:
         return df.shape[0]
 
 def populate_data():
-    '''defining class instance and calling class method''' 
-    download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, 'all_gene_disease_pmid_associations.tsv.gz'))
-    download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, 'all_variant_disease_pmid_associations.tsv.gz'))                                 
+    '''defining wrapper methods which can downlaod the file and populating the database ''' 
+    download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, DISGENET_GDP_FILE))
+    download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, DISGENET_VDP_FILE))                                 
     d = Disgenet()
     Base.metadata.drop_all(engine)       # drop if already exists
     Base.metadata.create_all(engine)     # re create incase it already exists, to avoid duplicates   
     d.insert_data()
     d.session.close()
 
-if __name__ == "__main__":
-    populate_data()
 
 
 

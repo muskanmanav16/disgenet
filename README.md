@@ -1,7 +1,7 @@
-# disgenet_Muskan package
+# disgenet_muskan package
 
 ## Description
-disgenet_muskan package allows you to:
+disgenet_muskan package allows:
 
 1. Create 'disgenet' db 
 2. Add 5 tables in this disgenet db 
@@ -24,7 +24,7 @@ To make it easy for you to get started with disgenet_muskan package,  here's a l
 5. run the cmds
      - from disgenet_muskan import disgenet
      - disgenet.populate_data()
-6. You can now view, disgenet and its tables on php admin.
+6. To view the disgenet tables you can use php admin.
 
 
 ## Support
@@ -34,4 +34,4 @@ Please reach out via email at muskanmanav16@gmail.com for any questions
 ## Authors and acknowledgment
 Author - Muskan Manav
 
-Special mentions to my colleagues and instructor - Christian Ebeling for their constant support and guidance.
+Special mentions to my instructor - Christian Ebeling for their constant support and guidance.

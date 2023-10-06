@@ -24,9 +24,7 @@ To make it easy for you to get started with disgenet_muskan package,  here's a l
 5. run the cmds
      - from disgenet_muskan import disgenet
      - disgenet.populate_data()
-6. You can now view, chebi db and its tables on php admin.
-7. Create turtle file (rdf triple stores) for the disgenet data
-8. Load the ttl file into Neo4j to view the knowledge graph
+6. You can now view, disgenet and its tables on php admin.
 
 
 ## Support

@@ -32,3 +32,5 @@ SQLAlchemy-Utils = "^0.37.8"
 pymysql = "1.0.2"
 cryptography = "^3.4.7"
 tqdm = "^4.66.1"
+rdflib = "^7.0.0"
+neo4j-tools = { git = "https://github.com/cebel/neo4j-tools.git" }

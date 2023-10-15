@@ -1,10 +1,9 @@
+#File for defining the contastant and urls for downloading the database
 import os
-from sqlalchemy import create_engine,inspect
-import requests
 
-#Defining the constants
+#Defining the constants 
 DISGENET = "disgenet"
-DISGENET_BASE = "https://www.disgenet.org/static/disgenet_ap1/files/downloads/"
+DISGENET_BASE = "https://www.disgenet.org/static/disgenet_ap1/files/downloads/" #url from disgenet
 DISGENET_GDP_FILE = "all_gene_disease_pmid_associations.tsv.gz"
 DISGENET_VDP_FILE = "all_variant_disease_pmid_associations.tsv.gz"
 DISGENET_GDP_ASSOC = DISGENET_BASE + DISGENET_GDP_FILE
@@ -13,26 +12,5 @@ current_dir = os.getcwd()
 DATA_DIR = os.path.join(current_dir, 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 
-def download_file(url, file_path):
-    if os.path.exists(file_path):
-        print(f"File already exists at {file_path}. Skipping download.")
-        return True
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(file_path, 'wb') as f:
-            f.write(response.content)
-        return True
-    return False
 
-#creating database if not present:
-engine_new = create_engine(f'mysql+pymysql://root:root_passwd@127.0.0.1:3307')
-with engine_new.connect() as connection:
-    connection.execute("CREATE DATABASE IF NOT EXISTS disgenet")
-    connection.execute("USE disgenet")
-    # connection.dispose()
-print("Database created and selected successfully.")
-
-# Create the connection string
-connection_string = f'mysql+pymysql://root:root_passwd@127.0.0.1:3307/disgenet'
-engine = create_engine(connection_string)
 

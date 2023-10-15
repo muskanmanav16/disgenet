@@ -1,26 +1,29 @@
-from sqlalchemy import create_engine,inspect
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from disgenet_muskan.constants import DATA_DIR,engine,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,connection_string,download_file,DISGENET_GDP_FILE,DISGENET_VDP_FILE
-from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol,Base
+from disgenet_muskan.constants import DATA_DIR,DISGENET,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC
+from disgenet_muskan.DBconnect import connection_string
+from disgenet_muskan.models import DisgenetGene,DisgenetVariant,DisgenetSource,DisgenetDisease,DisgenetGeneSymbol
+from disgenet_muskan.stdnames import standardize_column_names
 from tqdm import tqdm
 import pandas as pd
 import os
 import re
 
+
 """DisGeNet."""
 class Disgenet:
-    """DisGeNet (https://www.disgenet.org)."""
+    """DisGeNet (https://www.disgenet.org),
+        e(BE:L):(https://github.com/e-bel)  
+    """
 
     def __init__(self):
         """Init DisGeNet."""
-        #self.client = client
         self.biodb_name = DISGENET
         self.urls = {
             "disgenet_gene": DISGENET_GDP_ASSOC,
             "disgenet_variant": DISGENET_VDP_ASSOC,
         }
         self.engine = create_engine(connection_string)
-        #self.engine = create_engine(connection_string_with_db)
         self.session = Session(self.engine)
 
     def insert_data(self):
@@ -45,27 +48,8 @@ class Disgenet:
         return os.path.join(DATA_DIR, file_name)
 
 
-    def get_standard_name(self,name: str) -> str:
-        """Return standard name."""
-        part_of_name = [x for x in re.findall("[A-Z]*[a-z0-9]*", name) if x]
-        new_name = "_".join(part_of_name).lower()
-        if re.search(r"^\d+", new_name):
-            new_name = "_" + new_name
-        return new_name
-
-
-    def standardize_column_names(self,columns) :
-            """Standardize column names.
-
-            Parameters
-            ----------
-            columns: Iterable[str]
-                Iterable of columns names.
-            """
-            return [self.get_standard_name(x) for x in columns]
     def __get_file_for_model(self, model):
         """Return filepath of given model."""
-        #print(get_file_path(self.urls[model.__tablename__], self.biodb_name))
         return self.get_file_path(self.urls[model.__tablename__], self.biodb_name)
 
     @property
@@ -132,7 +116,7 @@ class Disgenet:
 
     def _insert_gene_disease_pmid_associations(self) -> int:
         usecols_gene = ["geneId", "diseaseId", "score", "pmid", "source"]
-        rename_dict = dict(zip(usecols_gene, self.standardize_column_names(usecols_gene)))
+        rename_dict = dict(zip(usecols_gene, standardize_column_names(usecols_gene)))
         df = pd.read_csv(self.file_path_gene, sep="\t", usecols=usecols_gene).rename(columns=rename_dict)
 
         df = self._merge_with_source(df)
@@ -142,16 +126,8 @@ class Disgenet:
         return df.shape[0]
 
     def _insert_variant_disease_pmid_associations(self) -> int:
-        usecols_variant = [
-            "snpId",
-            "chromosome",
-            "position",
-            "diseaseId",
-            "score",
-            "pmid",
-            "source",
-        ]
-        rename_dict = dict(zip(usecols_variant, self.standardize_column_names(usecols_variant)))
+        usecols_variant = ["snpId","chromosome","position","diseaseId","score","pmid","source"]
+        rename_dict = dict(zip(usecols_variant, standardize_column_names(usecols_variant)))
         df = pd.read_csv(self.file_path_variant, sep="\t", usecols=usecols_variant).rename(columns=rename_dict)
 
         df = self._merge_with_source(df)
@@ -160,15 +136,7 @@ class Disgenet:
         df.to_sql(DisgenetVariant.__tablename__, self.engine, if_exists="append")
         return df.shape[0]
 
-def populate_data():
-    '''defining wrapper methods which can downlaod the file and populating the database ''' 
-    download_file(DISGENET_GDP_ASSOC, os.path.join(DATA_DIR, DISGENET_GDP_FILE))
-    download_file(DISGENET_VDP_ASSOC, os.path.join(DATA_DIR, DISGENET_VDP_FILE))                                 
-    d = Disgenet()
-    Base.metadata.drop_all(engine)       # drop if already exists
-    Base.metadata.create_all(engine)     # re create incase it already exists, to avoid duplicates   
-    d.insert_data()
-    d.session.close()
+
 
 
 

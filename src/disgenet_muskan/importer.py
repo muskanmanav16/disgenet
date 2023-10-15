@@ -1,4 +1,5 @@
 import os
+from neo4j_tools import Db, Node, Edge
 from disgenet_muskan.constants import DATA_DIR,DISGENET_GDP_ASSOC,DISGENET_VDP_ASSOC,DISGENET_GDP_FILE,DISGENET_VDP_FILE
 from disgenet_muskan.DBconnect import engine
 from disgenet_muskan.disgenet import Disgenet
@@ -45,3 +46,18 @@ def populate_data(engine=engine,update=False):
     Base.metadata.create_all(engine)     # re-create incase it already exists, to avoid duplicates   
     d.insert_data()
     d.session.close()
+
+def create_neo4jgraph(file:str,graph_config=True):
+    """_summary_
+
+    Args:
+        file (str): _description_
+        graph_config (bool, optional): _description_. Defaults to True.
+
+    Returns:
+        _type_: _description_
+    """    
+    db = Db()
+    db.delete_all_nodes()
+    db.import_ttl(f"/data/{file}", init_graph_config=graph_config)
+    return [db.get_number_of_edges(),db.get_number_of_nodes()]

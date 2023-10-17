@@ -48,14 +48,15 @@ def populate_data(engine=engine,update=False):
     d.session.close()
 
 def create_neo4jgraph(file:str,graph_config=True):
-    """_summary_
+    """Takes name of the file which is already copied inti neo4j container
 
     Args:
-        file (str): _description_
-        graph_config (bool, optional): _description_. Defaults to True.
+        file (str): name of the file
+        graph_config (bool, optional): It should be True if
+        only one file is loaded , else it should be false. Defaults to True.
 
     Returns:
-        _type_: _description_
+        list: list of number edges and nodes in the graph
     """    
     db = Db()
     db.delete_all_nodes()

@@ -1,0 +1,49 @@
+version: '3'
+name: biodb
+
+services:
+  mysql:
+    image: docker.io/library/mysql:latest
+    container_name: mysql_biodb
+    environment:
+      MYSQL_ROOT_PASSWORD: root_passwd
+      MYSQL_DATABASE: biodb
+      MYSQL_USER: biodb_user
+      MYSQL_PASSWORD: biodb_user_passwd
+    ports:
+      - 3307:3306
+    volumes:
+      - biodb_mysql:/var/lib/mysql
+  phpmyadmin:
+    image: docker.io/phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_biodb
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    restart: always
+    ports:
+      - 8081:80
+  neo4j:
+    image: docker.io/library/neo4j:latest
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - biodb_neo4j_data:/data
+      - biodb_neo4j_plugins:/var/lib/neo4j/plugins
+      # NEO4JLABS_PLUGINS: '["apoc", "n10s", "graph-data-science"]'
+      #- biodb_neo4j_conf:/var/lib/neo4j/conf
+  neodash:
+    image: docker.io/neo4jlabs/neodash:latest
+    container_name: neodash_biodb
+    links:
+      - neo4j
+    ports:
+      - 5005:5005
+volumes:
+  biodb_mysql:
+  biodb_neo4j_data:
+  biodb_neo4j_plugins:
+  #biodb_neo4j_conf:

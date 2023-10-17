@@ -5,9 +5,17 @@ from sqlalchemy.orm import relationship
 
 
 def object_as_dict(obj, exclude: list = []) -> dict:
-    """Return object values as a dictionary."""
+    """Convert a SQLAlchemy object's attributes to a dictionary.
+    Args:
+        obj: The SQLAlchemy object to be converted to a dictionary.
+        exclude (list, optional): A list of attribute names to be excluded from the dictionary.
+            Defaults to an empty list.
+    Returns:
+        dict: A dictionary representation of the object's attributes.
+    """
     return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs if c.key not in exclude}
 
+#Add declarative base
 Base = declarative_base()
 class DisgenetGene(Base):
     """Class definition for the disgeneåt_gene table."""
@@ -25,7 +33,11 @@ class DisgenetGene(Base):
     source = relationship("DisgenetSource", foreign_keys=[source_id])
 
     def as_dict(self):
-        """Convert object values to dictionary."""
+        """Convert object attributes to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the object's attributes.
+        """
         rs = object_as_dict(self, exclude=["id", "source_id"])
         rs.update(
             {
@@ -47,7 +59,11 @@ class DisgenetGeneSymbol(Base):
     gene_disease_pmid_associations = relationship("DisgenetGene", back_populates="gene_symbol")
 
     def as_dict(self):
-        """Convert object values to dictionary."""
+        """Convert object attributes to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the object's attributes.
+        """
         return object_as_dict(self)
 
 
@@ -68,7 +84,11 @@ class DisgenetVariant(Base):
     source = relationship("DisgenetSource", foreign_keys=[source_id])
 
     def as_dict(self):
-        """Convert object values to dictionary."""
+        """Convert object attributes to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the object's attributes.
+        """
         rs = object_as_dict(self, exclude=["id", "source_id"])
         rs.update({"disease_name": self.disease.disease_name, "source": self.source.source})
         return rs
@@ -78,11 +98,15 @@ class DisgenetDisease(Base):
     """Class definition for the disgenet_disease table."""
 
     __tablename__ = "disgenet_disease"
-    disease_id = Column(String(100), primary_key=True) #CHANGED THE DATATYPE TO INTEGER
+    disease_id = Column(String(100), primary_key=True) 
     disease_name = Column(String(255), index=True)
 
     def as_dict(self):
-        """Convert object values to dictionary."""
+        """Convert object attributes to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the object's attributes.
+        """
         return object_as_dict(self)
 
 
@@ -94,5 +118,9 @@ class DisgenetSource(Base):
     source = Column(String(100), index=True)
 
     def as_dict(self):
-        """Convert object values to dictionary."""
+        """Convert object attributes to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the object's attributes.
+        """
         return object_as_dict(self, exclude=["id"])

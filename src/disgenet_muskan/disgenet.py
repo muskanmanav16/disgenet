@@ -27,7 +27,14 @@ class Disgenet:
         self.session = Session(self.engine)
 
     def insert_data(self):
-        """Insert data into database."""
+        """Insert data into the database.
+
+        This method inserts various types of data (e.g., sources, gene symbols, disease names,
+        gene-disease-PMID associations, variant-disease-PMID associations) into the database.
+
+        Returns:
+            dict: A dictionary containing the number of records inserted for each data type.
+        """
         inserted = dict()
 
         with tqdm(total=5, desc="Inserting data into database") as pbar:
@@ -63,6 +70,11 @@ class Disgenet:
         return self.__get_file_for_model(DisgenetVariant)
     
     def _insert_sources(self):
+        """Insert sources into the database.
+
+        Returns:
+            int: The number of sources inserted into the database.
+        """
         df_g = pd.read_csv(self.file_path_gene, sep="\t", usecols=["source"]).drop_duplicates()
         df_v = pd.read_csv(self.file_path_variant, sep="\t", usecols=["source"]).drop_duplicates()
         df = pd.concat([df_g, df_v]).drop_duplicates()
@@ -76,6 +88,11 @@ class Disgenet:
         return df.shape[0]
 
     def _insert_disease_names(self) -> int:
+        """Insert gene symbols into the database.
+
+        Returns:
+            int: The number of gene symbols inserted into the database.
+        """
         columns_disease = {"diseaseId": "disease_id", "diseaseName": "disease_name"}
 
         df_gene = (
@@ -97,6 +114,11 @@ class Disgenet:
    
 
     def _insert_gene_symbols(self) -> int:
+        """Insert gene symbols into the database.
+
+        Returns:
+            int: The number of gene symbols inserted into the database.
+        """
         columns_gene_symols = {"geneId": "gene_id", "geneSymbol": "gene_symbol"}
         df = (
             pd.read_csv(self.file_path_gene, sep="\t", usecols=list(columns_gene_symols.keys()))
@@ -108,6 +130,14 @@ class Disgenet:
         return df.shape[0]
 
     def _merge_with_source(self, df):
+        """Merge the data with source information.
+
+        Args:
+            df (pd.DataFrame): The DataFrame to be merged with source information.
+
+        Returns:
+            pd.DataFrame: The merged DataFrame.
+        """
         df_sources = pd.read_sql_table(DisgenetSource.__tablename__, self.engine).rename(
             columns={"id": "source_id"}
         )
@@ -115,6 +145,11 @@ class Disgenet:
     
 
     def _insert_gene_disease_pmid_associations(self) -> int:
+        """Insert gene-disease-PMID associations into the database.
+
+        Returns:
+            int: The number of associations inserted into the database.
+        """
         usecols_gene = ["geneId", "diseaseId", "score", "pmid", "source"]
         rename_dict = dict(zip(usecols_gene, standardize_column_names(usecols_gene)))
         df = pd.read_csv(self.file_path_gene, sep="\t", usecols=usecols_gene).rename(columns=rename_dict)
@@ -126,6 +161,11 @@ class Disgenet:
         return df.shape[0]
 
     def _insert_variant_disease_pmid_associations(self) -> int:
+        """Insert variant-disease-PMID associations into the database.
+
+        Returns:
+            int: The number of associations inserted into the database.
+        """
         usecols_variant = ["snpId","chromosome","position","diseaseId","score","pmid","source"]
         rename_dict = dict(zip(usecols_variant, standardize_column_names(usecols_variant)))
         df = pd.read_csv(self.file_path_variant, sep="\t", usecols=usecols_variant).rename(columns=rename_dict)

@@ -47,18 +47,23 @@ def populate_data(engine=engine,update=False):
     d.insert_data()
     d.session.close()
 
-def create_neo4jgraph(file:str,graph_config=True):
-    """Takes name of the file which is already copied inti neo4j container
+def create_neo4jgraph(file: str, graph_config=True, delete_nodes=False):
+    """Takes the name of the file which is already copied into the Neo4j container
 
     Args:
         file (str): name of the file
         graph_config (bool, optional): It should be True if
-        only one file is loaded , else it should be false. Defaults to True.
+        only one file is loaded, else it should be False. Defaults to True.
+        delete_nodes (bool, optional): If True, delete all nodes before importing the new data. Defaults to False.
 
     Returns:
-        list: list of number edges and nodes in the graph
+        list: list of the number of edges and nodes in the graph
     """    
     db = Db()
-    db.delete_all_nodes()
+    
+    if not delete_nodes:
+        db.delete_all_nodes()
+        
     db.import_ttl(f"/data/{file}", init_graph_config=graph_config)
-    return [db.get_number_of_edges(),db.get_number_of_nodes()]
+    
+    return [db.get_number_of_edges(), db.get_number_of_nodes()]

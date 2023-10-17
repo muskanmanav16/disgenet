@@ -17,6 +17,7 @@ def object_as_dict(obj, exclude: list = []) -> dict:
 
 #Add declarative base
 Base = declarative_base()
+''' source: e(BE:L):(https://github.com/e-bel)''' 
 class DisgenetGene(Base):
     """Class definition for the disgeneåt_gene table."""
 

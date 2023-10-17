@@ -1,12 +1,9 @@
-# disgenet_muskan package
+# disgenet_muskan
+![Alt text](image.png)
 
 ## Description
-disgenet_muskan package allows:
 
-1. Create 'disgenet' db 
-2. Add 5 tables in this disgenet db 
-3. Downloads the disgenet data from http server
-4. Imports the downloaded data into the disgenet tables
+The disgenet_muskan package is a versatile Python tool designed to seamlessly harness the rich resources of DisGeNET, one of the largest publicly available collections of genes and variants associated with human diseases. DisGeNET is a pioneering discovery platform that integrates data from expert-curated repositories, GWAS catalogues, animal models, and the scientific literature. It is homogeneously annotated with controlled vocabularies and community-driven ontologies, and provides original metrics for genotype-phenotype relationship prioritization.
 
 
 ## Getting started

@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "disgenet_muskan"
-version = "0.0.1"
+version = "0.0.4"
 authors = [
   "Muskan Manav <somumana@uni-bonn.de>"
 ]
@@ -33,4 +33,4 @@ pymysql = "1.0.2"
 cryptography = "^3.4.7"
 tqdm = "^4.66.1"
 rdflib = "^7.0.0"
-neo4j-tools = { git = "https://github.com/cebel/neo4j-tools.git" }
+#neo4j-tools = { git = "https://github.com/cebel/neo4j-tools.git" }

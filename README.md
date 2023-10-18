@@ -3,12 +3,28 @@
 
 ## Description
 
-The disgenet_muskan package is a versatile Python tool designed to seamlessly harness the rich resources of DisGeNET, one of the largest publicly available collections of genes and variants associated with human diseases. DisGeNET is a pioneering discovery platform that integrates data from expert-curated repositories, GWAS catalogues, animal models, and the scientific literature. It is homogeneously annotated with controlled vocabularies and community-driven ontologies, and provides original metrics for genotype-phenotype relationship prioritization.
+The disgenet_muskan package is a versatile Python tool designed to seamlessly harness the rich resources of [DisGeNET](https://www.disgenet.org), one of the largest publicly available collections of genes and variants associated with human diseases. DisGeNET is a pioneering discovery platform that integrates data from expert-curated repositories, GWAS catalogues, animal models, and the scientific literature. It is homogeneously annotated with controlled vocabularies and community-driven ontologies, and provides original metrics for genotype-phenotype relationship prioritization.
 ## Installation
+
+```python
+pip install disgenet_muskan
+```
+You can also download the latest version from [PyPI website](https://test.pypi.org/project/disgenet-muskan/)
+
 ## Package Structure
+This package consists of following files:
+- [constant](src/disgenet_muskan/constants.py)
+- [DBconnect](src/disgenet_muskan/DBconnect.py)
+- [disgenet](src/disgenet_muskan/disgenet.py)
+- [models](src/disgenet_muskan/models.py)
+- [stdnames](src/disgenet_muskan/stdnames.py)
+- [disgenet_rdf](src/disgenet_muskan/disgenet_rdf.py)
+- [importer](src/disgenet_muskan/importer.py)
 
-## data
+## Data Description
 
+## Disgenet Model Description
+![Alt text](image-1.png)
 ## Importing: Getting started
 
 To make it easy for you to get started with disgenet_muskan package,  here's a list of recommended next steps:
@@ -30,12 +46,11 @@ To make it easy for you to get started with disgenet_muskan package,  here's a l
 
 ## Usage
 
-## License
 
 ## Authors and acknowledgment
 Author - Muskan Manav
 
-Special mentions to my instructor - Christian Ebeling: <christian.ebeling@scai.fraunhofer.de> for their constant support and guidance.
+Special Thanks to my instructor - [Christian Ebeling](christian.ebeling@scai.fraunhofer.de) for their constant support and guidance.
 ## Support
 Please reach out via email at muskanmanav16@gmail.com for any questions
 

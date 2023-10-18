@@ -22,12 +22,12 @@ def makedataframe(engine=engine):
         WHERE score >=0.5;
     """
     combined_df = pd.read_sql_query(query, con=engine)
-    snps_query='''
+    snp_query='''
             Select * from disgenet_variant
             WHERE score >=0.5;
             '''
-    df_snps = pd.read_sql(snps_query, con=engine)
-    return combined_df,df_snps
+    df_snp = pd.read_sql(snp_query, con=engine)
+    return combined_df,df_snp
 
 def create_ttl(ttl_file:str,engine=engine):
     """Create an RDF Turtle file from data in a database.

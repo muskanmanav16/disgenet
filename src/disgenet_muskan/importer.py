@@ -63,7 +63,9 @@ def create_neo4jgraph(file: str, graph_config=True, delete_nodes=False):
     
     if not delete_nodes:
         db.delete_all_nodes()
+        print('Delete existing nodes')
+    file_name = 'file:///data/' + file
         
-    db.import_ttl(f"/data/{file}", init_graph_config=graph_config)
+    db.import_ttl(file_name, init_graph_config=graph_config)
     
     return [db.get_number_of_edges(), db.get_number_of_nodes()]

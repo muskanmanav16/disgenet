@@ -100,7 +100,8 @@ view the graph on neo4J and use the [this](#querying-the-graph) section to query
 ## Querying the Graph
 we imported the two turtle files from the disgenet data and hgnc data and connect the graph with the help of Gene Uri which was common in the both turtle file and compare them.
 Neo4j uses [cypher](https://neo4j.com/developer/cypher/). It is like SQL for graphs, and was inspired by SQL so it lets you focus on what data you want out of the graph. It is easy to use because of its similarity to other languages, and intuitiveness.
-For example to get the limited  number of nodes from the graph:
+Some graph to query the graphs using Neo4J graph using cypher query:
+- you can select the nodes using the query below: 
 ```cypher
 MATCH (g:gene)
 RETURN g
@@ -111,10 +112,23 @@ MATCH (d:disease)
 RETURN d
 LIMIT 25
 ```
+- You can use where condition to query the graph like this:
+```cypher
+match p=(d:disease) where d.disease_Name CONTAINS 'Parkinson' return p limit 15
+```
+- To connect different nodes and see the relationship the below query can be used.
+```cypher
+match p=(s:snp)--(d:disease)--(g:gene)--(e:ec) where d.disease_Name CONTAINS'Alzheimer' return p limit 25
+```
+This Cypher query is useful for exploring and retrieving information from a graph database that contains data related to SNPs, diseases, genes, and enzyme classes. Specifically, it is designed to find and retrieve paths that connect SNPs to diseases, genes, and enzyme classes, where the disease is related to Alzheimer's disease.
 ![Alt text](image-2.png)
 
-## Usage
+The usage of digenet_muskan package and to use cypher query can be seen in various scenarios(for instance taking the above example), such as:
 
+- Research: Researchers studying the genetic basis of Alzheimer's disease can use this query to find genetic variants (SNPs) associated with the disease.
+- Drug Discovery: Pharmaceutical companies can use this query to identify potential drug targets (genes) associated with Alzheimer's disease.
+- Personalized Medicine: Healthcare providers might use this query to understand how a patient's genetic variations (SNPs) are linked to diseases like Alzheimer's, aiding in personalized treatment plans.
+- Data Exploration: It allows users to explore complex relationships within a graph database, helping them discover previously unknown connections between genetic variations, diseases, genes, and enzymes.
 
 ## Authors and acknowledgment
 Author - Muskan Manav

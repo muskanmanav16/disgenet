@@ -61,7 +61,7 @@ def create_neo4jgraph(file: str, graph_config=True, delete_nodes=False):
     """    
     db = Db()
     
-    if not delete_nodes:
+    if delete_nodes == True:
         db.delete_all_nodes()
         print('Delete existing nodes')
     file_name = 'file:///data/' + file

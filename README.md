@@ -1,5 +1,4 @@
 # disgenet_muskan
-![Alt text](image.png)
 
 ## Description
 
@@ -130,6 +129,30 @@ The usage of digenet_muskan package and to use cypher query can be seen in vario
 - Personalized Medicine: Healthcare providers might use this query to understand how a patient's genetic variations (SNPs) are linked to diseases like Alzheimer's, aiding in personalized treatment plans.
 - Data Exploration: It allows users to explore complex relationships within a graph database, helping them discover previously unknown connections between genetic variations, diseases, genes, and enzymes.
 
+**Future improvements**:
+We tried to connect CheBI data with Hgnc so that we can get the association of chemicals with the disease related gene so for that we created a dummy nodes containing Chebi Information as shown below and tried to connect it with the gene related information present in our database.
+
+create ChEBI node using cypher and adding it's properties:
+```cypher
+CREATE (chebi:ChEBI {
+name: 'amyloid-β',
+chebiID: 'CHEBI:64645',
+asciiName: 'amyloid-beta',
+definition: 'A peptide of 36-43 amino acids that is processed from the amyloid precursor protein. Appears to be the main constituent of amyloid plaques (deposits found in the brains of Alzheimer\'s disease patients).'
+})
+```
+Then connect it manually to the gene PRSEN1 which is aasociated with alzheimer's disease.
+```cypher
+MATCH (amyloidBeta:ChEBI {chebiID: 'CHEBI:64645'})
+MATCH (gene:gene {name: 'presenilin 1'})
+CREATE (amyloidBeta)-[:IS_RELATED_TO]->(gene)
+```
+Then query the graph to see how all the three information are related
+```cypher
+match p=(g:gene)--(d:disease)--(s:snps),p2=(g:gene)--(c:ChEBI),p3=(g:gene)--(e:ec) where d.disease_Name CONTAINS'Alzheimer' return p,p2,p3 limit 25
+```
+![Alt text](image-3.png)
+While the process described above was executed manually, we are actively working on enhancing our package to automate and streamline these connections within the graph. The goal is to make it more efficient, accessible, and insightful for researchers and users looking to explore the intricate relationships between chemicals, genes, and diseases.
 ## Authors and acknowledgment
 Author - Muskan Manav
 

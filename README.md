@@ -30,7 +30,7 @@ This package consists of following files:
 - [DBconnect](src/disgenet_muskan/DBconnect.py)
   Consists of SQLAlchemy engine used to connect to the database.
 - [disgenet](src/disgenet_muskan/disgenet.py)
-  This file consists of the emthods used to fill the database.
+  This file consists of the methods used to fill the database.
 - [models](src/disgenet_muskan/models.py)
   Consists of the data models used to create the tables from the Data downloaded from Disgenet website.
 - [stdnames](src/disgenet_muskan/stdnames.py)

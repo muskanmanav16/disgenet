@@ -2,8 +2,9 @@
 
 ## Description
 
-The disgenet_muskan package is a versatile Python tool designed to seamlessly harness the rich resources of [DisGeNET](https://www.disgenet.org), one of the largest publicly available collections of genes and variants associated with human diseases. DisGeNET is a pioneering discovery platform that integrates data from expert-curated repositories, GWAS catalogues, animal models, and the scientific literature. It is homogeneously annotated with controlled vocabularies and community-driven ontologies, and provides original metrics for genotype-phenotype relationship prioritization.#
-ADD MORE DETAILS ABOUT PURPOSE OF PACKAGE
+The disgenet_muskan package is a versatile Python tool designed to seamlessly harness the rich resources of [DisGeNET](https://www.disgenet.org), one of the largest publicly available collections of genes and variants associated with human diseases. DisGeNET is a pioneering discovery platform that integrates data from expert-curated repositories, GWAS catalogues, animal models, and the scientific literature. It is homogeneously annotated with controlled vocabularies and community-driven ontologies, and provides original metrics for genotype-phenotype relationship prioritization.
+One of the primary goals of the DisGeNET_Muskan package is to enrich and extend Neo4j graph databases by seamlessly integrating the data of disease-gene and variant information from DisGeNET.The package streamlines the process of data extraction, transformation, and import into Neo4j, ultimately providing a powerful tool for graph-based analysis and discovery within the realm of human genetics and disease research.
+
 ## Installation
 
 ```python

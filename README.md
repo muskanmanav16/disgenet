@@ -17,7 +17,11 @@ To completely run the disgent_muskan package also install neo4j package from [gi
 pip uninstall neo4j_tools -y
 pip install -U git+https://github.com/cebel/neo4j-tools.git
 ```
-
+To utilize a Podman container, you have the option to download the Podman file from the "podman_compose" folder and execute the following command:
+```python
+podman-compose up -d
+```
+This command will initiate the containerized environment. If the Podman file is not present, you can provide users with the capability to download it.
 ## Package Structure
 This package consists of following files:
 - [constant](src/disgenet_muskan/constants.py)

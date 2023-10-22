@@ -154,7 +154,7 @@ CREATE (amyloidBeta)-[:IS_RELATED_TO]->(gene)
 ```
 Then query the graph to see how all the three information are related
 ```cypher
-match p=(g:gene)--(d:disease)--(s:snps),p2=(g:gene)--(c:ChEBI),p3=(g:gene)--(e:ec) where d.disease_Name CONTAINS'Alzheimer' return p,p2,p3 limit 25
+match p=(g:gene)--(d:disease)--(s:snp),p2=(g:gene)--(c:ChEBI),p3=(g:gene)--(e:ec) where d.disease_Name CONTAINS'Alzheimer' return p,p2,p3 limit 25
 ```
 ![Alt text](image-3.png)
 While the process described above was executed manually, we are actively working on enhancing our package to automate and streamline these connections within the graph. The goal is to make it more efficient, accessible, and insightful for researchers and users looking to explore the intricate relationships between chemicals, genes, and diseases.
